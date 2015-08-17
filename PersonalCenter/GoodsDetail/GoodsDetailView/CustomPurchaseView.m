@@ -1,0 +1,53 @@
+//
+//  CustomPurchaseView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-5-12.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "CustomPurchaseView.h"
+#import "GlobalMacro.h"
+
+@implementation CustomPurchaseView
+
+- (id)initWithFrame:(CGRect)frame label:(NSString *)labels image:(UIImage *)images content:(NSString *)contents coins:(NSString *)coins
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 50, frame.size.height)];
+        [self.label setText:labels];
+        [self.label setTextColor:[UIColor grayColor]];
+        [self.label setFont:[UIFont systemFontOfSize:15]];
+        [self addSubview:self.label];
+        [self.label sizeToFit];
+        
+        if (contents != nil) {
+            self.content = [[UITextField alloc] initWithFrame:CGRectMake(self.label.frame.size.width + self.label.frame.origin.x + 15, 0, frame.size.width - (self.label.frame.size.width + self.label.frame.origin.x + 15), frame.size.height)];
+//            [self.content setText:contents];
+            [self.content setPlaceholder:contents];
+            [self.content setTextColor:[UIColor blackColor]];
+            [self.content setFont:[UIFont systemFontOfSize:15]];
+            [self addSubview:self.content];
+        }
+        else
+        {
+            self.image = [[UIImageView alloc] initWithFrame:CGRectMake(self.label.frame.size.width + self.label.frame.origin.x + 15, 0, 12, frame.size.height)];
+            [self.image setImage:images];
+            [self addSubview:self.image];
+
+            self.coin = [[UILabel alloc] initWithFrame:CGRectMake(self.image.frame.origin.x + self.image.frame.size.width + 10, 0, 150, frame.size.height)];
+            [self.coin setFont:[UIFont systemFontOfSize:15]];
+            [self.coin setTextColor:coinColor];
+            [self.coin setText:coins];
+            [self addSubview:self.coin];
+        }
+        
+        
+        
+    }
+    return self;
+}
+
+
+@end

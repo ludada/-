@@ -1,0 +1,220 @@
+//
+//  RunnerViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RunnerViewController.h"
+#import "NetworkRequest.h"
+#import "URLMacro.h"
+
+@interface RunnerViewController()
+
+@end
+
+@implementation RunnerViewController
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    self.mapView=[[MKMapView alloc]initWithFrame:CGRectMake(0, 10, SCREEN_WIDTH, SCREEN_HEIGHT*2/3)];
+    self.mapView.mapType=MKMapTypeStandard;
+    self.mapView.delegate=self;
+    [self.view addSubview:self.mapView];
+    
+
+    _locationManger=[[CLLocationManager alloc]init];
+    
+    if (![CLLocationManager locationServicesEnabled]) {
+        NSLog(@"定位服务当前可能尚未打开，请设置打开！");
+        return;
+    }
+    
+    //如果没有授权则请求用户授权
+    if ([CLLocationManager authorizationStatus]==kCLAuthorizationStatusNotDetermined){
+        [_locationManger requestAlwaysAuthorization];
+        NSLog(@"requestwhen");
+    }else if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusAuthorizedWhenInUse){
+        //设置代理
+        _locationManger.delegate=self;
+        //设置定位精度
+        _locationManger.desiredAccuracy=kCLLocationAccuracyBest;
+        //定位频率,每隔多少米定位一次
+        CLLocationDistance distance=100.0;//十米定位一次
+        _locationManger.distanceFilter=distance;
+        //启动跟踪定位
+        [_locationManger startUpdatingLocation];
+            }
+    
+    
+    self.runFast=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/6, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10, SCREEN_WIDTH/10)];
+    
+    [self.runFast setBackgroundImage:[UIImage imageNamed:@"kuaipaob"] forState:UIControlStateNormal];
+    [self.runFast addTarget:self action:@selector(runfasterAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.runFast];
+    
+    
+    self.runLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH *3/10, self.mapView.frame.size.height+SCREEN_WIDTH/10+10, SCREEN_WIDTH/10, 16)];
+    self.runLabel.text=@"快跑";
+    [self.view addSubview:self.runLabel];
+    
+    [GlobalMethod drawLineWithFrame:CGRectMake(SCREEN_WIDTH *2/5, self.mapView.frame.size.height+SCREEN_WIDTH/10+SCREEN_WIDTH/20, SCREEN_WIDTH/5, 1) inView:self.view];
+    
+    
+    self.takeLabel=[[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH*3/5+5, self.runLabel.frame.origin.y, SCREEN_WIDTH/10, 16)];
+    self.takeLabel.text=@"打车";
+    [self.view addSubview:self.takeLabel];
+    [self.runLabel setTextColor:green];
+    
+    self.takeTaxi=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH*11/15, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10-6, SCREEN_WIDTH/10-6)];
+    [self.takeTaxi addTarget: self action:@selector(taketaxiAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.takeTaxi setBackgroundImage:[UIImage imageNamed:@"dacheb"] forState:UIControlStateNormal];
+    [self.view addSubview:self.takeTaxi];
+    
+    self.voice=[[UIButton alloc]initWithFrame:CGRectMake(20, self.runFast.frame.size.height+self.runFast.frame.origin.y+SCREEN_WIDTH/10, SCREEN_WIDTH/6, SCREEN_WIDTH/10)];
+    [self.voice setBackgroundImage:[UIImage imageNamed:@"yuyin"] forState:UIControlStateNormal];
+    [self.voice addTarget:self action:@selector(yuyinAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.voice];
+    
+    
+    self.textField=[[UITextField alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/4, self.runFast.frame.size.height+self.runFast.frame.origin.y+SCREEN_WIDTH/10, SCREEN_WIDTH/2, SCREEN_WIDTH/10)];
+    self.textField.placeholder=@"输入语音";
+    self.textField.borderStyle=UITextBorderStyleRoundedRect;
+    [self.view addSubview:self.textField];
+    
+    self.confirm=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH*3/4+10,  self.runFast.frame.size.height+self.runFast.frame.origin.y+SCREEN_WIDTH/10, SCREEN_WIDTH/6, SCREEN_WIDTH/10)];
+//    [self.confirm setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+    [self.confirm.layer setCornerRadius:10.0];
+    [self.confirm setBackgroundColor:green];
+    [self.confirm addTarget:self action:@selector(takeTextAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.confirm setTitle:@"发送" forState:UIControlStateNormal];
+    
+    [self.view addSubview:self.confirm];
+    
+    self.isLuyin=YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+    self.locationManger.delegate = self;
+    [self.locationManger startUpdatingLocation];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.locationManger.delegate = nil;
+    [self.locationManger stopUpdatingLocation];
+}
+
+#pragma mark - 定位代理
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    
+    CLLocation *location=[locations lastObject];
+    
+    self.longitude=[NSString stringWithFormat:@"%3.5f",location.coordinate.longitude];
+    self.latitude=[NSString stringWithFormat:@"%3.5f",location.coordinate.latitude];
+    
+    NSLog(@"long %@",self.longitude);
+    
+  //  [self addLocation];
+
+    
+
+    
+}
+#pragma mark -地图代理
+
+
+
+
+
+
+
+- (void)addLocation{
+    CLLocationCoordinate2D location1=CLLocationCoordinate2DMake([self.longitude floatValue] , [self.latitude floatValue] );
+    KCAnnotation *annotation=[[KCAnnotation alloc]init];
+    annotation.title=@"我的位置";
+    annotation.subtitle=@"lll";
+    annotation.coordinate2D=location1;
+    [_mapView addAnnotation:annotation];
+    
+    
+}
+
+- (void)runfasterAction
+{
+    self.runFast.frame=CGRectMake(SCREEN_WIDTH/6, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10, SCREEN_WIDTH/10);
+    
+    [self.runFast setBackgroundImage:[UIImage imageNamed:@"kuaipaob"] forState:UIControlStateNormal];
+
+    self.takeTaxi.frame=CGRectMake(SCREEN_WIDTH*11/15, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10-6, SCREEN_WIDTH/10-6);
+    [self.takeTaxi setBackgroundImage:[UIImage imageNamed:@"dacheb"] forState:UIControlStateNormal];
+    
+    [self.runLabel setTextColor:green];
+    [self.takeLabel setTextColor:FontGray];
+
+
+}
+
+- (void)taketaxiAction
+{
+
+    
+    self.runFast.frame=CGRectMake(SCREEN_WIDTH/6, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10-6, SCREEN_WIDTH/10-6);
+    
+    [self.runFast setBackgroundImage:[UIImage imageNamed:@"kuaipaoa"] forState:UIControlStateNormal];
+    [self.runLabel setTextColor:FontGray];
+    [self.takeLabel setTextColor:green];
+    self.takeTaxi.frame=CGRectMake(SCREEN_WIDTH*11/15, self.mapView.frame.size.height+SCREEN_WIDTH/10, SCREEN_WIDTH/10, SCREEN_WIDTH/10);
+    [self.takeTaxi setBackgroundImage:[UIImage imageNamed:@"dachea"] forState:UIControlStateNormal];
+    
+    
+}
+
+- (void)yuyinAction{
+    if (self.isLuyin) {
+        self.isLuyin=NO;
+        [self.voice setBackgroundImage:[UIImage imageNamed:@"yuyin"] forState:UIControlStateNormal];
+    } else {
+        self.isLuyin=YES;
+        [self.voice setBackgroundImage:[UIImage imageNamed:@"jianpan"] forState:UIControlStateNormal];
+    }
+    
+}
+
+- (void)takeTextAction{
+    NSString *str=POST_SEND_MESSAGE(@"1", @"s", @"s");
+    NSLog(@"%@ str",str);
+    NSString *url=@"http://123.57.61.27:8080/runfast/VoiceMessagesAction!voiceMessagesAdd.action?";
+    NSMutableDictionary *parmas = [NSMutableDictionary dictionary];
+    parmas[@"id"]=@"";
+    parmas[@"type"]=@"";
+    parmas[@"content"]=self.textField.text;
+    //parmas[@"page"]=@"1";
+    
+    [NetworkRequest netWorkRequestPOSTWithString:url Parameters:parmas ResponseBlock:^(id result) {
+        NSDictionary *dic=result;
+        if ([[dic objectForKey:@"msg"] isEqualToString:@"1"]) {
+            UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"反馈成功" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil, nil];
+            [alert show];
+            
+            
+        }
+        
+        
+    }];
+    
+
+    
+}
+@end

@@ -1,0 +1,113 @@
+//
+//  StoreDetailView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "StoreDetailView.h"
+#import "GlobalMacro.h"
+#import "CustomSDetailView.h"
+#import "GlobalMethod.h"
+#import "GlobalMethod.h"
+@implementation StoreDetailView
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.picArray = [NSMutableArray array];
+        self.scrollArray = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)createDetailView
+{
+    [self detailHeaderView];
+    [self detailInfo];
+}
+
+- (void)detailHeaderView
+{
+    self.scrollUp = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 190)];
+    self.scrollUp.delegate = self;
+    self.scrollUp.pagingEnabled = YES;
+    self.scrollUp.contentSize  =CGSizeMake(SCREEN_WIDTH * 5, 0);
+    [self.scrollUp setBackgroundColor:[UIColor orangeColor]];
+    [self addSubview:self.scrollUp];
+    
+    
+    //给图片和label赋值
+    for (int i = 0; i < 5; i++) {
+        
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * i, 0, SCREEN_WIDTH, self.scrollUp.frame.size.height)];
+        button.tag = 100+ i;
+//        [button setBackgroundColor:[UIColor grayColor]];
+        [self.scrollUp addSubview:button];
+        
+        UIButton *accessoryBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.scrollUp.frame.size.height - 40, SCREEN_WIDTH, 40)];
+        [accessoryBtn setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.3]];
+        [accessoryBtn setTag:10 + i];
+        [button addSubview:accessoryBtn];
+        
+    }
+    
+    
+}
+
+- (void)detailInfo
+{
+    UIView *downView = [[UIView alloc] initWithFrame:CGRectMake(0 , self.scrollUp.frame.size.height + self.scrollUp.frame.origin.y , SCREEN_WIDTH, SCREEN_HEIGHT - self.scrollUp.frame.size.height - 64)];
+//    [downView setBackgroundColor:[UIColor purpleColor]];
+    [self addSubview:downView];
+    
+    UILabel *introduct = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 20)];
+//    [introduct setBackgroundColor:[UIColor brownColor]];
+    [introduct setText:@"店铺简介"];
+    [introduct setFont:[UIFont systemFontOfSize:15]];
+    [introduct setFont:[UIFont boldSystemFontOfSize:15]];
+    [introduct setTextAlignment:NSTextAlignmentLeft];
+    [downView addSubview:introduct];
+    
+    //自适应高度
+    self.introduce = [[UILabel alloc] initWithFrame:CGRectMake(introduct.frame.origin.x, introduct.frame.origin.y + introduct.frame.size.height + 10, SCREEN_WIDTH - 20, 140)];
+    [self.introduce setBackgroundColor:[UIColor blueColor]];
+    [self.introduce setFont:[UIFont systemFontOfSize:11]];
+    [self.introduce setNumberOfLines:0];
+    [downView addSubview:self.introduce];
+    
+    
+    
+    self.address = [[CustomSDetailView alloc] initWithFrame:CGRectMake(10, 10 + self.introduce.frame.origin.y + self.introduce.frame.size.height, SCREEN_WIDTH - 20, 40) title:@"地址" content:@"北京市大兴区华北路78号院79号" image:nil];
+//    [self.address setBackgroundColor:[UIColor redColor]];
+    [downView addSubview:self.address];
+    
+    [GlobalMethod drawLineWithFrame:CGRectMake(0, 0, self.address.frame.size.width, 0.5) inView:self.address];
+    [GlobalMethod drawLineWithFrame:CGRectMake(0, 39.5, self.address.frame.size.width, 0.5) inView:self.address];
+    
+    self.tele = [[CustomSDetailView alloc] initWithFrame:CGRectMake(self.address.frame.origin.x, self.address.frame.origin.y + self.address.frame.size.height, self.address.frame.size.width, self.address.frame.size.height) title:@"电话" content:@"010-67809876" image:nil];
+    [downView addSubview:self.tele];
+    
+    [GlobalMethod drawLineWithFrame:CGRectMake(0, 39.5, self.address.frame.size.width, 0.5) inView:self.tele];
+    
+    UILabel *picDetail = [[UILabel alloc] initWithFrame:CGRectMake(10 , self.tele.frame.origin.y + self.tele.frame.size.height, 100, 20)];
+    [picDetail setFont:[UIFont systemFontOfSize:15]];
+    [picDetail setFont:[UIFont boldSystemFontOfSize:15]];
+//    [picDetail setBackgroundColor:[UIColor orangeColor]];
+    [picDetail setText:@"图片详情"];
+    [downView addSubview:picDetail];
+    
+    self.scrollDown = [[UIScrollView alloc] initWithFrame:CGRectMake(10, picDetail.frame.origin.y + picDetail.frame.size.height + 10, self.address.frame.size.width, (self.address.frame.size.width - 30)/4 + 10)];
+    [self.scrollDown setContentSize:CGSizeMake(((self.scrollDown.frame.size.width - 30)/4 + 5) * 6 - 10, 0)];
+    [self.scrollDown setBackgroundColor:[UIColor grayColor]];
+    [self.scrollDown setPagingEnabled:YES];
+    [self.scrollDown setDelegate:self];
+    [downView addSubview:self.scrollDown];
+    
+    
+}
+
+
+
+@end

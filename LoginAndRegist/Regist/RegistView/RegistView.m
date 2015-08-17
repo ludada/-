@@ -1,0 +1,75 @@
+//
+//  RegistView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RegistView.h"
+#import "GlobalMacro.h"
+#import "CustomLoginView.h"
+@implementation RegistView
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void)createRegistView
+{
+    self.tel = [[CustomLoginView alloc] initWithFrame:CGRectMake(0, 20, SCREEN_WIDTH, 50) image:[UIImage imageNamed:@"mobile"] placeHold:@"手机号"];
+    self.tel.field.keyboardType = UIKeyboardTypeNumberPad;
+    [self addSubview:self.tel];
+    
+    self.checkNum = [[CustomLoginView alloc] initWithFrame:CGRectMake(0 , self.tel.frame.origin.y + self.tel.frame.size.height + 10, SCREEN_WIDTH, self.tel.frame.size.height) image:[UIImage imageNamed:@"email"] placeHold:@"验证码"];
+    self.checkNum.field.keyboardType = UIKeyboardTypeNumberPad;
+    [self addSubview:self.checkNum];
+    
+    self.password = [[CustomLoginView alloc] initWithFrame:CGRectMake(0, self.checkNum.frame.size.height + self.checkNum.frame.origin.y + 10, SCREEN_WIDTH, self.checkNum.frame.size.height) image:[UIImage imageNamed:@"password"] placeHold:@"密码"];
+    self.password.field.secureTextEntry=YES;
+    [self addSubview:self.password];
+    
+    
+    self.AgreeWith = [[UIButton alloc] initWithFrame:CGRectMake(30, self.password.frame.origin.y + self.password.frame.size.height + 10, 17, 17)];
+    [self.AgreeWith setBackgroundColor:[UIColor whiteColor]];
+    [self.AgreeWith setImage:[UIImage imageNamed:@"sure"] forState:UIControlStateNormal];
+    self.tip = YES;
+    self.AgreeWith.layer.cornerRadius = 3;
+    self.AgreeWith.layer.masksToBounds = YES;
+    self.AgreeWith.layer.borderWidth = 1;
+    self.AgreeWith.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    [self addSubview:self.AgreeWith];
+    
+    self.agreement = [[UIButton alloc] initWithFrame:CGRectMake(self.AgreeWith.frame.size.width + self.AgreeWith.frame.origin.x + 10, self.AgreeWith.frame.origin.y + 5, 200, 10)];
+    [self.agreement setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.agreement.titleLabel setFont:[UIFont systemFontOfSize:13]];
+    [self.agreement setTitle:@"点击下一步默认为同意改服务条款" forState:UIControlStateNormal];
+    [self.agreement.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    [self addSubview:self.agreement];
+    
+    self.nextStep = [[UIButton alloc] initWithFrame:CGRectMake(20, self.AgreeWith.frame.origin.y + self.AgreeWith.frame.size.height + 15, SCREEN_WIDTH - 40, 50)];
+    [self.nextStep setTitle:@"下一步" forState:UIControlStateNormal];
+    [self.nextStep setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.nextStep setBackgroundImage:[UIImage imageNamed:@"login"] forState:UIControlStateNormal];
+    self.nextStep.layer.cornerRadius = 7;
+    self.nextStep.layer.masksToBounds = YES;
+    [self addSubview:self.nextStep];
+    
+    
+    
+    self.getCheckNum = [[UIButton alloc] initWithFrame:CGRectMake(self.tel.frame.size.width - 130, 10, 100, 30)];
+    [self.getCheckNum setBackgroundColor:TabGray];
+    [self.getCheckNum setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [self.getCheckNum setTitleColor:FontGray forState:UIControlStateNormal];
+    self.getCheckNum.layer.cornerRadius = 5;
+    self.getCheckNum.layer.masksToBounds = YES;
+    [self.getCheckNum.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [self.getCheckNum.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [self.tel addSubview:self.getCheckNum];
+}
+
+@end

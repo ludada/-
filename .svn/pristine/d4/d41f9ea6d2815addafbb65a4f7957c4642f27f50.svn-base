@@ -1,0 +1,136 @@
+//
+//  RechargeViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RechargeViewController.h"
+#import "GlobalMacro.h"
+
+@implementation RechargeViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+    
+    self=[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+    }
+    return  self;
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    self.navigationItem.title=@"充值";
+    self.isMoney=YES;
+    self.money=@"50";
+    self.rechargeView=[[RechargeView alloc]initWithFrame:CGRectMake(20, 10, SCREEN_WIDTH-40, SCREEN_HEIGHT/5)];
+    [self.rechargeView.button1 setBackgroundImage:[UIImage imageNamed:@"greenCircle"] forState:UIControlStateNormal];
+    self.rechargeView.button1.tag=50;
+    [self.rechargeView.button1 addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.rechargeView.label1 setTextColor:green];
+    
+    [self.rechargeView.button2 setBackgroundImage:[UIImage imageNamed:@"whiteCircle"] forState:UIControlStateNormal];
+    self.rechargeView.button2.tag=100;
+    [self.rechargeView.label2 setTextColor:[UIColor grayColor]];
+    [self.rechargeView.button2 addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.view addSubview:self.rechargeView];
+    
+    self.weixin=[[UIButton alloc]initWithFrame:CGRectMake(20, SCREEN_HEIGHT/5+30, SCREEN_WIDTH-40,SCREEN_HEIGHT/15)];
+    [self.weixin setBackgroundImage:[UIImage imageNamed:@"weixinzhifu"] forState:UIControlStateNormal];
+    [self.weixin addTarget:self action:@selector(weixinAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.weixin];
+    
+    
+    self.zhifubao=[[UIButton alloc]initWithFrame:CGRectMake(20, SCREEN_HEIGHT/5+SCREEN_HEIGHT/15+40, SCREEN_WIDTH-40, SCREEN_HEIGHT/15)];
+    [self.zhifubao setBackgroundImage:[UIImage imageNamed:@"zhifubaozhifu"] forState:UIControlStateNormal];
+    [self.zhifubao addTarget:self action:@selector(zhifubaoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.zhifubao];
+    
+    self.yinhang=[[UIButton alloc]initWithFrame:CGRectMake(20, SCREEN_HEIGHT/5+SCREEN_HEIGHT*2/15+50, SCREEN_WIDTH-40, SCREEN_HEIGHT/15)];
+    [self.yinhang setBackgroundImage:[UIImage imageNamed:@"yinhangkazhifu"] forState:UIControlStateNormal];
+    [self.yinhang addTarget:self action:@selector(zhifubaoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.yinhang];
+    
+    self.rechargeView.money.delegate=self;
+    
+}
+
+#pragma mark - 文本框代理
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self.rechargeView.button2 setBackgroundImage:[UIImage imageNamed:@"whiteCircle"] forState:UIControlStateNormal];
+    [self.rechargeView.label2 setTextColor:[UIColor grayColor]];
+    
+    [self.rechargeView.button1 setBackgroundImage:[UIImage imageNamed:@"whiteCircle"] forState:UIControlStateNormal];
+    [self.rechargeView.label1 setTextColor:[UIColor grayColor]];
+   
+    
+    NSLog(@"daili");
+    
+    
+}
+
+
+
+
+#pragma mark - 按钮点击事件
+- (void)buttonClick:(UIButton *)button{
+    
+    
+    self.rechargeView.money.text=@"";
+    self.money=[NSString stringWithFormat:@"%ld",(long)button.tag];
+    if (self.isMoney) {
+        self.isMoney=NO;
+        [self.rechargeView.button1 setBackgroundImage:[UIImage imageNamed:@"greenCircle"] forState:UIControlStateNormal];
+        [self.rechargeView.label1 setTextColor:green];
+        
+        [self.rechargeView.button2 setBackgroundImage:[UIImage imageNamed:@"whiteCircle"] forState:UIControlStateNormal];
+        [self.rechargeView.label2 setTextColor:[UIColor grayColor]];
+    }else{
+        self.isMoney=YES;
+        [self.rechargeView.button2 setBackgroundImage:[UIImage imageNamed:@"greenCircle"] forState:UIControlStateNormal];
+        [self.rechargeView.label2 setTextColor:green];
+        
+        [self.rechargeView.button1 setBackgroundImage:[UIImage imageNamed:@"whiteCircle"] forState:UIControlStateNormal];
+        [self.rechargeView.label1 setTextColor:[UIColor grayColor]];
+        
+    }
+    
+    
+}
+
+- (void)weixinAction:(id)sender{
+    NSString *money=[self getMoney];
+    NSLog(@"money %@",money);
+    
+}
+
+- (void)zhifubaoAction:(id)sender{
+    NSString *money=[self getMoney];
+    NSLog(@"money %@",money);
+
+    
+}
+
+- (void)yinhangAction:(id)sender{
+    NSString *money=[self getMoney];
+    NSLog(@"money %@",money);
+
+    
+}
+
+- (NSString *)getMoney{
+    if ([self.rechargeView.money.text isEqualToString:@""]) {
+        return self.money;
+    } else {
+        return self.rechargeView.money.text;
+    }
+    
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.rechargeView.money resignFirstResponder];
+}
+@end

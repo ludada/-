@@ -1,0 +1,45 @@
+//
+//  PersonalViewController.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//  我的页面
+
+#import "BaseViewController.h"
+#import "PersonalView.h"
+#import "PersonalHeadView.h"
+#import "SettingViewController.h"
+#import "MyCoinViewController.h"
+
+@interface PersonalViewController : BaseViewController<UITextFieldDelegate>
+
+@property (nonatomic, strong) PersonalHeadView *personalHead;
+
+@property (nonatomic, strong) PersonalView *recharge;
+
+@property (nonatomic, strong) PersonalView *dajinquan;
+
+@property (nonatomic, strong) PersonalView *myGold;
+
+@property (nonatomic, strong) PersonalView *myOrder;
+
+@property (nonatomic, strong) PersonalView *store;
+
+
+//个人信息修改跳转
+- (void)infoChangeAction;
+
+//设置页面跳转
+- (void)settingAction;
+
+//我的金币界面
+- (void)myCoinAction;
+
+//代金券
+- (void)ticketsAction;
+
+//充值
+- (void)chargeAction:(id)sender;
+
+@end

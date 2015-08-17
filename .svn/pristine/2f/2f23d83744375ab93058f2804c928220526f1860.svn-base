@@ -1,0 +1,140 @@
+//
+//  RunnerStoreViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RunnerStoreViewController.h"
+#import "RunnerStoreView.h"
+#import "GlobalMacro.h"
+#import "NetworkRequest.h"
+#import "CustomItemButton.h"
+#import "URLMacro.h"
+#import "picModel.h"
+@interface RunnerStoreViewController()<UICollectionViewDataSource, UICollectionViewDelegate>
+
+@end
+
+@implementation RunnerStoreViewController
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.tableArray = [NSMutableArray array];
+    }
+    return self;
+}
+- (void)loadView
+{
+    [super loadView];
+    self.runnerStore = [[RunnerStoreView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.runnerStore createRunnerStore];
+    self.view = self.runnerStore;
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.runnerStore.collectView.delegate = self;
+    self.runnerStore.collectView.dataSource = self;
+    
+    [self.runnerStore.localLife addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.runnerStore.shopping addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+- (void)buttonAction:(id)sender
+{
+
+    CustomItemButton *button = (CustomItemButton *)sender;
+    if (button.tag == 110) {
+        //精品购物
+        [button setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+        [self.runnerStore.localLife setBackgroundColor:[UIColor clearColor]];
+
+    }
+    else
+    {
+        //本地生活
+        [button setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+        [self.runnerStore.shopping setBackgroundColor:[UIColor clearColor]];
+    }
+    
+    
+   
+}
+
+
+
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 20;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    [cell setBackgroundColor:[UIColor grayColor]];
+    return cell;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.tabBarController.tabBar.hidden = YES;
+}
+
+#pragma mark - 快跑商城广告位
+- (void)runnerStoreAdvertisement
+{
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    [para setValue:@"3" forKey:@"type"];
+    [NetworkRequest netWorkRequestPOSTWithString:POST_ADVERTISE Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@", result);
+        NSMutableArray *array = [GlobalMethod arrayResults:result];
+        NSMutableArray *dataArray = [NSMutableArray array];
+        for (NSDictionary *dic in array) {
+            picModel *model = [[picModel alloc] init];
+            [model setValuesForKeysWithDictionary:dic];
+            [dataArray addObject:model];
+        }
+        self.runnerStore.picArray = dataArray;
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@" , error);
+    }];
+}
+
+
+#pragma mark - 获取数据源
+- (void)getDataSourse
+{
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    [para setValue:@"1" forKey:@"type"];
+    [para setValue:@"0" forKey:@"content"];
+    [para setValue:@"1" forKey:@"page"];
+    [para setValue:@"1000" forKey:@"rows"];
+    
+    [NetworkRequest netWorkRequestPOSTWithString:POST_FASTERRUNNER_STORES Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@" ,result);
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@" , error);
+        
+    }];
+}
+
+
+
+
+
+
+
+
+@end

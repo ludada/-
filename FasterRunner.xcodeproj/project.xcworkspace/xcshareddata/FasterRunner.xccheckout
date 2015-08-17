@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>15869DE5-0FEB-461B-AD32-4A8B26B99848</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>cd709847-8014-414e-9628-c802737d55ec</key>
+		<string>http://182.92.102.184:8888/svn/ios_RGB</string>
+	</dict>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>cd709847-8014-414e-9628-c802737d55ec</key>
+		<string>ios_RGB%202/</string>
+	</dict>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>cd709847-8014-414e-9628-c802737d55ec</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>cd709847-8014-414e-9628-c802737d55ec</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ios_RGB%202</string>
+		</dict>
+	</array>
+</dict>
+</plist>

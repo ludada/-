@@ -1,0 +1,211 @@
+//
+//  StoreViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "StoreViewController.h"
+#import "NetworkRequest.h"
+#import "GlobalMacro.h"
+#import "StoreTableViewCell.h"
+#import "StoreView.h"
+#import "StoreModel.h"
+#import "URLMacro.h"
+#import "StoreDetailViewController.h"
+#import "picModel.h"
+#import "TypeModle.h"
+#import "StoreModel.h"
+#import "UIImageView+WebCache.h"
+@interface StoreViewController()<UITableViewDataSource, UITableViewDelegate>
+
+@end
+
+@implementation StoreViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.tableArray = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    [super loadView];
+    self.store = [[StoreView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.store createStoreView];
+    self.view = self.store;
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = @"商圈";
+    
+    //获取数据
+    [self getPicData];
+    [self getTypeListData];
+}
+//五个button的点击事件
+- (void)buttonAction:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    [button setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    for (UIButton *myButton in self.store.buttonArray) {
+        if (myButton != button) {
+            [myButton setBackgroundColor:[UIColor clearColor]];
+        }
+    }
+
+    TypeModle *model = [self.store.typeArray objectAtIndex:button.tag - 100];
+    [self getListData:model.id];
+    
+}
+
+
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tableArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    StoreModel *model = [self.tableArray objectAtIndex:indexPath.row];
+    [cell.image setImageWithURL:[NSURL URLWithString:model.headImg] placeholderImage:nil options:SDWebImageRetryFailed];
+    [cell.name setText:model.name];
+    [cell.style setText:model.desc];
+    [cell.address setText:model.adress];
+    [cell.time setText:model.busiTime];
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StoreDetailViewController *detail = [[StoreDetailViewController alloc] init];
+    [self.navigationController pushViewController:detail animated:YES];
+    
+    StoreModel *model = [self.tableArray objectAtIndex:indexPath.row];
+    detail.storeDetailId = model.id;
+}
+
+
+#pragma mark - - - - - - - - 数据获取 - - - - - - - - - - - - - - -
+
+
+/**
+ *  获取广告图片数据, 加载完成后 开启定时器
+ */
+- (void)getPicData
+{
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    [para setValue:@"2" forKey:@"type"];
+
+
+    NSString *url = @"http://123.57.61.27:8080/runfast/GraphicAction!graphicGuidePage.action?";
+
+    [NetworkRequest netWorkRequestPOSTWithString:url Parameters:para ResponseBlock:^(id result) {
+        
+        NSMutableArray *array = [GlobalMethod arrayResults:result];
+        NSMutableArray *dataArray = [NSMutableArray array];
+        for (NSDictionary *myDic in array) {
+            picModel *model = [[picModel alloc] init];
+            [model setValuesForKeysWithDictionary:myDic];
+            [dataArray addObject:model];
+        }
+        self.store.picArray = [NSMutableArray arrayWithArray:dataArray];
+        [self.store setTimer];
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+    }];
+    
+    
+}
+
+/**
+ *  需要先获取商圈id 然后在获取商圈列表
+ */
+
+#pragma mark - 获取商圈类型列表
+- (void)getTypeListData
+{
+    
+    [NetworkRequest netWorkRequestGetWithString:GET_STORE_TYPE ResponseBlock:^(id result) {
+        NSLog(@"8888%@",result);
+        NSMutableArray *array = [GlobalMethod arrayResults:result];
+        NSMutableArray *dataArray = [NSMutableArray array];
+        for (NSDictionary *myDic in array) {
+            TypeModle *model = [[TypeModle alloc] init];
+            [model setValuesForKeysWithDictionary:myDic];
+            [dataArray addObject:model];
+        }
+        self.store.typeArray = [NSMutableArray arrayWithArray:dataArray];
+        self.store.tableView.delegate = self;
+        self.store.tableView.dataSource = self;
+        
+        
+        //类目栏的点击事件
+        for (int i = 0; i < 5; i++) {
+            UIButton *button = (UIButton *)[self.store viewWithTag:100 + i];
+            [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+        }
+
+        
+        //调取列表数据
+        TypeModle *model = [self.store.typeArray firstObject];
+        [self getListData:model.id];
+
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+#pragma mark - 根据类型获取商圈列表
+- (void)getListData:(NSString *)typeId
+{
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    [para setValue:typeId forKey:@"id"];
+    [para setValue:@"1" forKey:@"page"];
+    [para setValue:@"1000" forKey:@"rows"];
+    NSString *url=@"http://123.57.61.27:8080/runfast/BusinessStoreAction!businessStoreList.action?";
+    [NetworkRequest netWorkRequestPOSTWithString:url Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@", result);
+        NSMutableArray * array = [GlobalMethod arrayResults:result];
+        NSMutableArray *dataArray = [NSMutableArray array];
+        for (NSDictionary *myDic in array) {
+            StoreModel *model = [[StoreModel alloc] init];
+            [model setValuesForKeysWithDictionary:myDic];
+            [dataArray addObject:model];
+        }
+        self.tableArray = dataArray;
+        [self.store.tableView reloadData];
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.hideTab = NO;
+}
+
+@end

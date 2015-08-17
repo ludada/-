@@ -1,0 +1,56 @@
+//
+//  RegistViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RegistViewController.h"
+#import "RegistView.h"
+#import "GlobalMacro.h"
+#import "RegistNextViewController.h"
+@interface RegistViewController()
+
+
+@end
+
+@implementation RegistViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.backButton = YES;
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    [super loadView];
+    self.regist = [[RegistView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.regist createRegistView];
+    self.view = self.regist;
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = @"注册";
+    [self.regist.nextStep addTarget:self action:@selector(nextStepAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+- (void)nextStepAction:(id)sender
+{
+    RegistNextViewController *next = [[RegistNextViewController alloc] init];
+    [self.navigationController pushViewController:next animated:YES];
+}
+
+
+
+
+
+@end

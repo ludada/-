@@ -1,0 +1,20 @@
+//
+//  ChangePasswordViewController.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-29.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//  修改密码页面
+
+#import "BaseViewController.h"
+
+@interface ChangePasswordViewController : BaseViewController
+
+@property (nonatomic, strong) UITextField *oPassword;
+
+@property (nonatomic, strong) UITextField *nPassword;
+
+@property (nonatomic, strong) UIButton *button;
+
+- (void)changPasswordAction;
+@end

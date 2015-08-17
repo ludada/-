@@ -1,0 +1,127 @@
+//
+//  AppDelegate.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "AppDelegate.h"
+#import "RunnerViewController.h"
+#import "StoreViewController.h"
+#import "PersonalViewController.h"
+#import "LoginViewController.h"
+#import "GlobalMacro.h"
+#import "Singleton.h"
+@interface AppDelegate ()<UITabBarControllerDelegate>
+
+@end
+
+@implementation AppDelegate
+
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [_window setBackgroundColor:[UIColor whiteColor]];
+    [_window makeKeyAndVisible];
+    
+    
+    //创建标签试图控制器
+    UITabBarController *tab = [[UITabBarController alloc] init];
+    tab.delegate = self;
+    //字
+    tab.tabBar.tintColor = green;
+    //tab
+    tab.tabBar.barTintColor = TabGray;
+    NSMutableArray *tabArray = [NSMutableArray array];
+    
+    
+    /**
+     *  首页
+     */
+    RunnerViewController *runnerPage = [[RunnerViewController alloc] init];
+    UINavigationController *runnerPageNav = [[UINavigationController alloc] initWithRootViewController:runnerPage];
+    [tabArray addObject:runnerPageNav];
+    //设置背景图片和文字
+    UIImage *pageImage = [UIImage imageNamed:@"shouye1"];
+    pageImage = [pageImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    runnerPage.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"首页" image:pageImage tag:10];
+    
+    /**
+     *  商城
+     */
+    StoreViewController *store = [[StoreViewController alloc] init];
+    UINavigationController *storeNav = [[UINavigationController alloc] initWithRootViewController:store];
+    [tabArray addObject:storeNav];
+    UIImage *storeImage = [UIImage imageNamed:@"Store1"];
+    storeImage = [storeImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    store.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"商圈" image:storeImage tag:12];
+    
+    
+    /**
+     *  我的
+     */
+    PersonalViewController *personal = [[PersonalViewController alloc] init];
+    UINavigationController *personalNav = [[UINavigationController alloc] initWithRootViewController:personal];
+    [tabArray addObject:personalNav];
+    UIImage *personImage = [UIImage imageNamed:@"wode1"];
+    personImage = [personImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    personal.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"我的" image:personImage tag:13];
+    
+    /**
+     *  设置根视图控制器
+     */
+    tab.viewControllers = tabArray;
+//    [_window setRootViewController:tab];
+    Singleton *share = [Singleton shareInstance];
+    [share.myTabArray addObjectsFromArray:tabArray];
+    
+
+    
+    LoginViewController *login = [[LoginViewController alloc] init];
+    UINavigationController *loginNac = [[UINavigationController alloc] initWithRootViewController:login];
+    [_window setRootViewController:loginNac];
+    
+    
+    
+    
+    
+    return YES;
+}
+
+
+/**
+ *  tabBarController 代理  点击的时候会走这个方法
+ *
+ *  @param application
+ */
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    
+}
+
+
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+@end

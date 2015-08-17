@@ -1,0 +1,32 @@
+//
+//  PersonalViewController.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//  我的页面
+
+#import "BaseViewController.h"
+#import "PersonalView.h"
+#import "PersonalHeadView.h"
+#import "SettingViewController.h"
+
+@interface PersonalViewController : BaseViewController
+
+@property (nonatomic, strong) PersonalHeadView *personalHead;
+
+@property (nonatomic, strong) PersonalView *recharge;
+
+@property (nonatomic, strong) PersonalView *dajinquan;
+
+@property (nonatomic, strong) PersonalView *myGold;
+
+@property (nonatomic, strong) PersonalView *myOrder;
+
+@property (nonatomic, strong) PersonalView *store;
+
+
+
+//设置页面跳转
+- (void)settingAction;
+@end

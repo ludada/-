@@ -1,0 +1,51 @@
+//
+//  RunnerViewController.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//  快跑主页面
+
+#import "BaseViewController.h"
+#import <MapKit/MapKit.h>
+#import "KCAnnotation.h"
+#import "GlobalMacro.h"
+#import "GlobalMethod.h"
+
+@interface RunnerViewController : BaseViewController<MKMapViewDelegate,CLLocationManagerDelegate>
+
+@property (nonatomic, strong) MKMapView *mapView;
+
+@property (nonatomic, strong) CLLocationManager *locationManger;
+
+@property (nonatomic, strong) UIButton *runFast;
+
+@property (nonatomic, strong) UIButton *takeTaxi;
+
+@property (nonatomic, strong) UILabel *runLabel;
+
+@property (nonatomic, strong) UILabel *takeLabel;
+
+@property (nonatomic, strong) UIButton *voice;
+
+@property (nonatomic, strong) UIButton *confirm;
+
+@property (nonatomic, strong) UITextField *textField;
+
+@property (nonatomic, strong) NSString *latitude;
+
+@property (nonatomic, strong) NSString *longitude;
+
+@property (nonatomic)BOOL isLuyin;
+
+//添加自己的位置
+- (void) addLocation;
+//快跑按钮事件
+- (void) runfasterAction;
+//出租车按钮事件
+- (void) taketaxiAction;
+//语音事件
+- (void) yuyinAction;
+//发送语音
+- (void) takeTextAction;
+@end

@@ -1,0 +1,134 @@
+//
+//  StoreViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "StoreViewController.h"
+#import "NetworkRequest.h"
+#import "GlobalMacro.h"
+#import "StoreTableViewCell.h"
+#import "StoreView.h"
+#import "StoreModel.h"
+#import "URLMacro.h"
+#import "StoreDetailViewController.h"
+@interface StoreViewController()<UITableViewDataSource, UITableViewDelegate>
+
+@end
+
+@implementation StoreViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.tableArray = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    [super loadView];
+    self.store = [[StoreView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.store createStoreView];
+    self.view = self.store;
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.store.tableView.delegate = self;
+    self.store.tableView.dataSource = self;
+    self.navigationItem.title = @"商圈";
+    
+    //类目栏的点击事件
+    for (int i = 0; i < 5; i++) {
+        UIButton *button = (UIButton *)[self.store viewWithTag:100 + i];
+        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+//五个button的点击事件
+- (void)buttonAction:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    [button setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    for (UIButton *myButton in self.store.buttonArray) {
+        if (myButton != button) {
+            [myButton setBackgroundColor:[UIColor clearColor]];
+        }
+    }
+
+}
+
+
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    StoreDetailViewController *detail = [[StoreDetailViewController alloc] init];
+    [self.navigationController pushViewController:detail animated:YES];
+}
+
+/**
+ *  获取title图片数据, 加载完成后 开启定时器
+ */
+- (void)getPicData
+{
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    [para setValue:@"2" forKey:@"type"];
+    [NetworkRequest netWorkRequestPOSTWithString:POST_ADVERTISE Parameters:para ResponseBlock:^(id result) {
+        
+    } ErrorBlock:^(id error) {
+        
+    }];
+}
+
+/**
+ *  需要先获取商圈id 然后在获取商圈列表
+ *
+ *  @return
+ */
+
+#warning 是第一次就全部获取  还是 点击一次获取一次?
+
+/**
+ *  获取列表数据
+ */
+
+- (void)getListData
+{
+    
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.hideTab = NO;
+}
+
+@end

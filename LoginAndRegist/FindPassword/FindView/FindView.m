@@ -1,0 +1,79 @@
+//
+//  FindView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "FindView.h"
+#import "GlobalMacro.h"
+#import "CustomLoginView.h"
+@implementation FindView
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+    }
+    return self;
+}
+- (void)createFindView
+{
+    UILabel *inputTel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 200, 15)];
+    [inputTel setText:@"请输入手机号:"];
+    [inputTel setTextColor:[UIColor grayColor]];
+    [inputTel setFont:[UIFont systemFontOfSize:15]];
+    [inputTel setFont:[UIFont boldSystemFontOfSize:15]];
+    [self addSubview:inputTel];
+    
+    self.telephone = [[CustomLoginView alloc] initWithFrame:CGRectMake(0, inputTel.frame.size.height + inputTel.frame.origin.y + 20, SCREEN_WIDTH, 50) image:[UIImage imageNamed:@"mobile"] placeHold:@"请输入手机号"];
+    [self addSubview:self.telephone];
+    
+    self.checkNum = [[CustomLoginView alloc] initWithFrame:CGRectMake(0, self.telephone.frame.origin.y + self.telephone.frame.size.height + 10, SCREEN_WIDTH, self.telephone.frame.size.height) image:[UIImage imageNamed:@"email"] placeHold:@"请输入验证码"];
+    [self addSubview:self.checkNum];
+    
+    
+    UILabel *newPass = [[UILabel alloc] initWithFrame:CGRectMake(inputTel.frame.origin.x, self.checkNum.frame.origin.y + self.checkNum.frame.size.height + 20, inputTel.frame.size.width, inputTel.frame.size.height)];
+    [newPass setText:@"请输入新密码:"];
+    [newPass setTextColor:[UIColor grayColor]];
+    [newPass setFont:[UIFont systemFontOfSize:15]];
+    [newPass setFont:[UIFont boldSystemFontOfSize:15]];
+    [self addSubview:newPass];
+    
+    self.newsPassword = [[CustomLoginView alloc] initWithFrame:CGRectMake(0, newPass.frame.size.height + newPass.frame.origin.y + 20, SCREEN_WIDTH, self.telephone.frame.size.height) image:[UIImage imageNamed:@"password"] placeHold:@"请输入新密码"];
+    self.newsPassword.field.secureTextEntry = YES;
+    [self addSubview:self.newsPassword];
+    
+    
+    self.commit = [[UIButton alloc] initWithFrame:CGRectMake(newPass.frame.origin.x, self.newsPassword.frame.origin.y + self.newsPassword.frame.size.height + 20, SCREEN_WIDTH  - newPass.frame.origin.x * 2, self.newsPassword.frame.size.height)];
+    [self.commit setBackgroundImage:[UIImage imageNamed:@"login"] forState:UIControlStateNormal];
+    [self.commit setTitle:@"提交" forState:UIControlStateNormal];
+    [self.commit.titleLabel setFont:[UIFont systemFontOfSize:20]];
+    [self.commit.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [self.commit setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.commit.layer.cornerRadius = 7;
+    self.commit.layer.masksToBounds = YES;
+    [self addSubview:self.commit];
+    
+    /**
+     *  获取验证码
+     */
+    
+    self.getCheckNum = [[UIButton alloc] initWithFrame:CGRectMake(self.telephone.frame.size.width - 130, 10, 100, 30)];
+    [self.getCheckNum setBackgroundColor:TabGray];
+    [self.getCheckNum setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [self.getCheckNum setTitleColor:FontGray forState:UIControlStateNormal];
+    self.getCheckNum.layer.cornerRadius = 5;
+    self.getCheckNum.layer.masksToBounds = YES;
+    [self.getCheckNum.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [self.getCheckNum.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [self.telephone addSubview:self.getCheckNum];
+    
+    
+    
+    
+   
+ 
+}
+@end

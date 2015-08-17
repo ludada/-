@@ -1,0 +1,20 @@
+//
+//  RunnerStoreModel.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RunnerStoreModel.h"
+
+@implementation RunnerStoreModel
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
+@end

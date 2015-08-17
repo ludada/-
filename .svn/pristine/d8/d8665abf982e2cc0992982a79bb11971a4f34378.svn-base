@@ -1,0 +1,75 @@
+//
+//  StoreDetailViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "StoreDetailViewController.h"
+#import "StoreDetailView.h"
+#import "GlobalMacro.h"
+#import "NetworkRequest.h"
+#import "URLMacro.h"
+#import "GlobalMethod.h"
+#import "StoreDetailModel.h"
+
+@implementation StoreDetailViewController
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.backButton = YES;
+    }
+    return self;
+}
+- (void)loadView
+{
+    [super loadView];
+    self.detail = [[StoreDetailView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+//    [self.detail createDetailView];
+    self.view = self.detail;
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = @"餐饮";
+    [self getstoreDetailData];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.hideTab = YES;
+
+}
+
+
+#pragma mark - 获取商圈详情数据
+- (void)getstoreDetailData
+{
+    NSDictionary *para = @{@"id" : self.storeDetailId};
+    
+    [NetworkRequest netWorkRequestPOSTWithString:POST_STORE_DETAIL Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@", result);
+        NSDictionary *dic = [GlobalMethod dictionaryResults:result];
+        StoreDetailModel *model = [[StoreDetailModel alloc] init];
+        [model setValuesForKeysWithDictionary:dic];
+        self.detail.dataModel = model;
+        
+        //上图  添加点击事件
+        for (int i = 0; i < self.detail.upPicArray.count; i++) {
+            UIButton *button = (UIButton *)[self.detail.scrollUp viewWithTag:100 + i];
+//            [button addTarget:slf action:<#(SEL)#> forControlEvents:<#(UIControlEvents)#>]
+        }
+        
+        for (int j = 0; j < self.detail.downPicArray.count; j ++) {
+            UIButton *button = (UIButton *)[self.detail.scrollDown viewWithTag:1000 + j];
+            //添加点击事件
+            
+        }
+        
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+@end

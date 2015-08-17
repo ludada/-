@@ -1,0 +1,52 @@
+//
+//  RechargeView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RechargeView.h"
+
+@implementation RechargeView
+
+- (id)initWithFrame:(CGRect)frame{
+    self=[super initWithFrame:frame];
+    if (self) {
+        self.button1=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, self.frame.size.height/8, self.frame.size.height/8)];
+        [self addSubview:self.button1];
+        
+        self.label1=[[UILabel alloc]initWithFrame:CGRectMake(30+self.frame.size.height/8, 10, self.frame.size.width/5, self.frame.size.height/8)];
+        self.label1.text=@"50元";
+        [self addSubview:self.label1];
+        
+        
+        self.button2=[[UIButton alloc]initWithFrame:CGRectMake(10, self.frame.size.height/3+15, self.frame.size.height/8, self.frame.size.height/8)];
+        [self addSubview:self.button2];
+        
+        self.label2=[[UILabel alloc]initWithFrame:CGRectMake(30+self.frame.size.height/8, self.frame.size.height/3+15, self.frame.size.width/5, self.frame.size.height/8)];
+        self.label2.text=@"100元";
+        self.label1.textAlignment=UITextAlignmentLeft;
+        self.label2.textAlignment=UITextAlignmentLeft;
+        [self addSubview:self.label2];
+        
+        
+        self.label3=[[UILabel alloc]initWithFrame:CGRectMake(10, self.frame.size.height*2/3, self.frame.size.height, self.frame.size.height/4)];
+        [self.label3 setTextColor:[UIColor grayColor]];
+        self.label3.text=@"自定义";
+        [self addSubview:self.label3];
+        
+        self.money=[[UITextField alloc]initWithFrame:CGRectMake(self.frame.size.height/3+20, self.frame.size.height*2/3, self.frame.size.height+20, self.frame.size.height/4)];
+        self.money.borderStyle=UITextBorderStyleRoundedRect;
+        [self.money setBackgroundColor:[UIColor whiteColor]];
+        [self addSubview:self.money];
+        
+        [self setBackgroundColor:[UIColor whiteColor]];
+        
+    }
+    
+    return self;
+    
+}
+
+@end

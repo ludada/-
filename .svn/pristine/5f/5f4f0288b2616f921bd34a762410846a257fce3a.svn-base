@@ -1,0 +1,61 @@
+//
+//  InputView.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "InputView.h"
+
+@implementation InputView
+
+-(id)initWithFrame:(CGRect)frame{
+    self=[super initWithFrame:frame];
+    if (self) {
+        self.voice=[[UIButton alloc]initWithFrame:CGRectMake(10, 10, self.frame.size.width/7, self.frame.size.height/5)];
+//        [self.voice setBackgroundColor:[UIColor grayColor]];
+//        [self.voice setTitleColor:FontGray forState:UIControlStateNormal];
+        [self.voice setBackgroundImage:[UIImage imageNamed:@"yuyin"] forState:UIControlStateNormal];
+        [self.voice.layer setCornerRadius:10.0];
+        [self addSubview:self.voice];
+        
+        
+        self.textView=[[PlaceholderTextView alloc]initWithFrame:CGRectMake(self.frame.size.width/5, 10, self.frame.size.width*3/5, self.frame.size.height/5)];
+        self.textView.placeholder=@"请输入您的要求";
+        self.textView.font=[UIFont systemFontOfSize:20];
+        [self addSubview:self.textView];
+        
+        self.sendVoice=[[UIButton alloc]initWithFrame:CGRectMake(self.frame.size.width/5, 10, self.frame.size.width*3/5, self.frame.size.height/5)];
+        [self.sendVoice setBackgroundColor:TabGray];
+        [self.sendVoice setTitle:@"按住说话" forState:UIControlStateNormal];
+        
+        
+        self.sendMessage=[[UIButton alloc]initWithFrame:CGRectMake(self.frame.size.width-10-self.frame.size.width/7, 10, self.frame.size.width/7, self.frame.size.height/5) ];
+        [self.sendMessage setBackgroundColor:green];
+        [self.sendMessage setTitle:@"发送" forState:UIControlStateNormal];
+        [self.sendMessage.layer setCornerRadius:10.0];
+        [self addSubview:self.sendMessage];
+        
+        
+        self.confirm=[[UIButton alloc]initWithFrame:CGRectMake(20, self.frame.size.height/5+30, self.frame.size.width-40, self.frame.size.height/5)];
+        [self.confirm setBackgroundColor:green];
+        
+        [self.confirm setTitle:@"确定发布订单" forState:UIControlStateNormal];
+        [self.confirm.layer setCornerRadius:10.0];
+        self.confirm.layer.masksToBounds=YES;
+        [self addSubview:self.confirm];
+        
+        self.cancle=[[UIButton alloc]initWithFrame:CGRectMake(20, self.frame.size.height*2/5+50, self.frame.size.width-40, self.frame.size.height/5)];
+        [self.cancle.layer setCornerRadius:10];
+        [self.cancle setBackgroundColor:TabGray];
+        [self.cancle setTitleColor:FontGray forState:UIControlStateNormal];
+        [self.cancle setTitle:@"取消发布订单" forState:UIControlStateNormal];
+        [self addSubview:self.cancle];
+        
+        
+    }
+    return  self;
+}
+
+@end

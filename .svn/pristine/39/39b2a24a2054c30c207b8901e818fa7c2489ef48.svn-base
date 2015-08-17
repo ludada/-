@@ -1,0 +1,48 @@
+//
+//  RunnerStoreViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "RunnerStoreViewController.h"
+#import "RunnerStoreView.h"
+#import "GlobalMacro.h"
+#import "NetworkRequest.h"
+@implementation RunnerStoreViewController
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.tableArray = [NSMutableArray array];
+    }
+    return self;
+}
+- (void)loadView
+{
+    [super loadView];
+    self.runnerStore = [[RunnerStoreView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.runnerStore createRunnerStore];
+    self.view = self.runnerStore;
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@end

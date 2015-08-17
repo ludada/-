@@ -1,0 +1,114 @@
+//
+//  CashTicketViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "CashTicketViewController.h"
+#import "GlobalMacro.h"
+@implementation CashTicketViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+    self=[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+    }
+    return self;
+    
+}
+- (void)viewDidLoad{
+    
+    [super viewDidLoad];
+    
+    self.navigationItem.title=@"代金券";
+    self.isUse=YES;
+    
+    self.noUse=[[UIButton alloc]initWithFrame:CGRectMake(10, 20, SCREEN_WIDTH/2-10, SCREEN_HEIGHT/20)];
+    [self.noUse setBackgroundColor:green];
+    self.noUse.layer.borderWidth=1;
+    self.noUse.layer.borderColor=[green CGColor];
+  //  [self.noUse.layer setCornerRadius:10];
+    [self.noUse setTitle:@"可用代金券" forState:UIControlStateNormal];
+    [self.noUse addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.noUse];
+    
+    self.already=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2, 20, SCREEN_WIDTH/2-10, SCREEN_HEIGHT/20)];
+    [self.already setTitle:@"已用代金券" forState:UIControlStateNormal];
+    [self.already setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    self.already.layer.borderWidth=1;
+    //[self.already.layer setCornerRadius:10];
+    self.already.layer.borderColor=[[UIColor grayColor] CGColor];
+    [self.already setBackgroundColor:BackGray];
+    [self.already addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.already];
+    
+    
+    self.tableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 30+SCREEN_HEIGHT/20, SCREEN_WIDTH, SCREEN_HEIGHT-100)];
+    self.tableView.dataSource=self;
+    self.tableView.delegate=self;
+    [self.view addSubview:self.tableView];
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    [self.tableView registerClass:[CashTicketsTableViewCell class] forCellReuseIdentifier:@"cell1"];
+    
+    
+}
+#pragma mark -tableview代理 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return 3;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 150;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    CashTicketsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell1"];
+    if (self.isUse) {
+        [cell.backImg setImage:[UIImage imageNamed:@"daijinquan_03"]];
+    } else {
+        [cell.backImg setImage:[UIImage imageNamed:@"daijinquan_01"]];
+
+    }
+    cell.moneyCount.text=@"5五元";
+    
+    
+    return cell;
+    
+    
+}
+
+
+#pragma mark - 按钮事件
+- (void)buttonClick:(UIButton *)button{
+    if (self.isUse) {
+        self.isUse=NO;
+        [self.tableView reloadData];
+        [self.already setBackgroundColor:green];
+        self.already.layer.borderColor=[green CGColor];
+        self.noUse.layer.borderColor=[[UIColor grayColor] CGColor];
+        [self.noUse setBackgroundColor:BackGray];
+        [self.already setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.noUse setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+
+        
+        
+    } else {
+        
+        self.isUse=YES;
+        [self.noUse setBackgroundColor:green];
+        self.noUse.layer.borderWidth=1;
+        self.noUse.layer.borderColor=[green CGColor];
+        self.already.layer.borderColor=[[UIColor grayColor] CGColor];
+        [self.already setBackgroundColor:BackGray];
+        [self.already setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [self.noUse setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.tableView reloadData];
+    }
+    
+}
+
+
+@end

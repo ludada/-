@@ -1,0 +1,135 @@
+//
+//  PersonalViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "PersonalViewController.h"
+#import "GlobalMacro.h"
+#import "RunnerStoreViewController.h"
+#import "ChangeViewController.h"
+#import "CashTicketViewController.h"
+#import "RechargeViewController.h"
+
+@interface PersonalViewController()
+
+@end
+
+@implementation PersonalViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    [super loadView];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.title = @"我的";
+    
+    UIBarButtonItem *right=[[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"setting"] style:UIBarButtonItemStyleDone target:self action:@selector(settingAction)];
+    self.navigationItem.rightBarButtonItem=right;
+    
+    self.personalHead=[[PersonalHeadView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT/8)];
+    self.personalHead.name.text=@"aldfjal";
+    self.personalHead.phone.text=@"123";
+    [self.personalHead.headView addTarget:self action:@selector(infoChangeAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.personalHead.headView setBackgroundColor:[UIColor greenColor]];
+    [self.view addSubview:self.personalHead];
+    
+    
+    self.recharge=[[PersonalView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/8+10, SCREEN_WIDTH, SCREEN_HEIGHT/12)];
+    self.recharge.label.text=@"充值";
+    [self.recharge.lastImg setImage:[UIImage imageNamed:@"next1"]];
+    [self.recharge.button addTarget:self action:@selector(chargeAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.recharge.headImg setImage:[UIImage imageNamed:@"charge"]];
+    [self.view addSubview:self.recharge];
+    
+    self.dajinquan=[[PersonalView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/8+SCREEN_HEIGHT/12+11.5, SCREEN_WIDTH, SCREEN_HEIGHT/12)];
+    [self.dajinquan.lastImg setImage:[UIImage imageNamed:@"next1"]];
+
+    self.dajinquan.label.text=@"代金券";
+    [self.dajinquan.button addTarget:self action:@selector(ticketsAction) forControlEvents:UIControlEventTouchUpInside] ;
+    [self.dajinquan.headImg setImage:[UIImage imageNamed:@"daijinquan"]];
+    [self.view addSubview:self.dajinquan];
+    
+    self.myGold=[[PersonalView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/8+SCREEN_HEIGHT/6+13, SCREEN_WIDTH, SCREEN_HEIGHT/12)];
+    [self.myGold.lastImg setImage:[UIImage imageNamed:@"next1"]];
+
+    [self.myGold.headImg setImage:[UIImage imageNamed:@"gold"]];
+    self.myGold.label.text=@"我的金币";
+    [self.myGold.button addTarget:self action:@selector(myCoinAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.myGold];
+    
+    self.myOrder=[[PersonalView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/8+SCREEN_HEIGHT/4+14.5, SCREEN_WIDTH, SCREEN_HEIGHT/12)];
+    self.myOrder.label.text=@"我的订单";
+    [self.myOrder.lastImg setImage:[UIImage imageNamed:@"next1"]];
+    [self.myOrder.headImg setImage:[UIImage imageNamed:@"dingdan"]];
+    
+    [self.view addSubview:self.myOrder];
+    
+    self.store=[[PersonalView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT/8+SCREEN_HEIGHT/3+16, SCREEN_WIDTH, SCREEN_HEIGHT/12)];
+    [self.store.lastImg setImage:[UIImage imageNamed:@"next1"]];
+    [self.store.headImg setImage:[UIImage imageNamed:@"shangcheng"]];
+    self.store.label.text=@"快跑商城";
+    [self.store.button addTarget:self action:@selector(storeAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.store];
+    
+    
+}
+
+/**
+ *  设置
+ */
+- (void)infoChangeAction{
+    ChangeViewController *change=[[ChangeViewController alloc]init];
+    [self.navigationController pushViewController:change animated:YES];
+}
+
+- (void)settingAction{
+    
+    SettingViewController *setting=[[SettingViewController alloc]init];
+    [self.navigationController pushViewController:setting animated:YES];
+}
+
+/**
+ *  快跑商城的点击事件
+ */
+- (void)storeAction:(id)sender
+{
+    RunnerStoreViewController *runnerStore = [[RunnerStoreViewController alloc] init];
+    [self.navigationController pushViewController:runnerStore animated:YES];
+    
+}
+
+
+- (void)myCoinAction{
+    MyCoinViewController *coin=[[MyCoinViewController alloc]init];
+    [self.navigationController pushViewController:coin animated:YES];
+    
+}
+
+- (void)ticketsAction{
+    
+    CashTicketViewController *tickets=[[CashTicketViewController alloc]init];
+    [self.navigationController pushViewController:tickets animated:YES];
+}
+
+- (void)chargeAction:(id)sender{
+    RechargeViewController *recharge=[[RechargeViewController alloc]init];
+    [self.navigationController pushViewController:recharge animated:YES]
+    ;
+}
+
+@end

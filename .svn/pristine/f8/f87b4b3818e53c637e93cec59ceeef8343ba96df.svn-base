@@ -1,0 +1,75 @@
+//
+//  BaseViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "BaseViewController.h"
+#import "GlobalMacro.h"
+#import "GlobalMethod.h"
+@interface BaseViewController ()
+
+@end
+
+@implementation BaseViewController
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        //是否有tab
+        self.hideTab = NO;
+        self.backButton = NO;
+        
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.view setBackgroundColor:BackGray];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"Status_bar"] forBarMetrics:UIBarMetricsDefault];
+    
+}
+
+//是否设置返回按钮
+- (void)setBackButton:(BOOL)backButton
+{
+    if (backButton) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    }
+}
+//返回
+- (void)backAction:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+//隐藏tabbar
+- (void)setHideTab:(BOOL)hideTab
+{
+    if (hideTab) {
+        self.tabBarController.tabBar.hidden = NO;
+    }
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

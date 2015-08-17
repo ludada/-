@@ -1,0 +1,209 @@
+//
+//  GlobalMethod.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "GlobalMethod.h"
+#import <CommonCrypto/CommonDigest.h>
+#import "BaseModel.h"
+@implementation GlobalMethod
+
++ (void)drawLineWithStartPoint:(CGPoint)startPoint EndPoint:(CGPoint)endPoint inUIView:(UIView *)view
+{
+    UIImageView *imageView=[[UIImageView alloc] initWithFrame:view.frame];
+    [view addSubview:imageView];
+    UIGraphicsBeginImageContext(imageView.frame.size);
+    [imageView.image drawInRect:CGRectMake(0, 0, imageView.frame.size.width, imageView.frame.size.height)];
+    CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), 0.5f);  //线宽
+    CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), NO);
+    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), 200 / 255.0f, 199 / 255.0f, 204 / 255.0f, 0.7);  //颜色
+    CGContextBeginPath(UIGraphicsGetCurrentContext());
+    CGContextMoveToPoint(UIGraphicsGetCurrentContext(), startPoint.x, startPoint.y);  //起点坐标
+    CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), endPoint.x, endPoint.y);   //终点坐标
+    CGContextStrokePath(UIGraphicsGetCurrentContext());
+    imageView.image=UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+}
+
+
++ (void)drawLineWithStartPoint:(CGPoint)startPoint EndPoint:(CGPoint)endPoint inUIView:(UIView *)view myTag:(NSInteger)myTag
+{
+    UIImageView *imageView=[[UIImageView alloc] initWithFrame:view.frame];
+    imageView.tag = myTag;
+    [view addSubview:imageView];
+    UIGraphicsBeginImageContext(imageView.frame.size);
+    [imageView.image drawInRect:CGRectMake(0, 0, imageView.frame.size.width, imageView.frame.size.height)];
+    CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), 0.5f);  //线宽
+    CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), NO);
+    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), 200 / 255.0f, 199 / 255.0f, 204 / 255.0f, 0.7);  //颜色
+    CGContextBeginPath(UIGraphicsGetCurrentContext());
+    CGContextMoveToPoint(UIGraphicsGetCurrentContext(), startPoint.x, startPoint.y);  //起点坐标
+    CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), endPoint.x, endPoint.y);   //终点坐标
+    CGContextStrokePath(UIGraphicsGetCurrentContext());
+    imageView.image=UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+}
+
+
+
+
++ (void)drawLineWithFrame:(CGRect)frame inView:(UIView *)view;
+{
+    UIView *line = [[UIView alloc] initWithFrame:frame];
+    [line setBackgroundColor:[UIColor lightGrayColor]];
+    [line setAlpha:0.4];
+    [view addSubview:line];
+}
++ (void)drawLineWithFrame:(CGRect)frame inView:(UIView *)view withColor:(UIColor *)color
+{
+    UIView *line = [[UIView alloc] initWithFrame:frame];
+    [line setBackgroundColor:color];
+    [line setAlpha:0.4];
+    [view addSubview:line];
+}
+
+
+
+
++(UIColor *) hexStringToColor: (NSString *) stringToConvert
+{
+    NSString *cString = [[stringToConvert stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+    // String should be 6 or 8 charactersif ([cString length] < 6) return [UIColor blackColor];
+    // strip 0X if it appearsif ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
+    if ([cString hasPrefix:@"#"]) cString = [cString substringFromIndex:1];
+    if ([cString length] != 6) return [UIColor blackColor];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.location = 0;
+    range.length = 2;
+    NSString *rString = [cString substringWithRange:range];
+    range.location = 2;
+    NSString *gString = [cString substringWithRange:range];
+    range.location = 4;
+    NSString *bString = [cString substringWithRange:range];
+    // Scan values
+    unsigned int r, g, b;
+    
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    
+    return [UIColor colorWithRed:((float) r / 255.0f)
+                           green:((float) g / 255.0f)
+                            blue:((float) b / 255.0f)
+                           alpha:1.0f];
+}
+
++(NSString *) md5:(NSString *)str
+{
+    const char *cStr = [str UTF8String];
+    unsigned char result[16];
+    CC_MD5( cStr, strlen(cStr), result );
+    NSString *string = [NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], result[13], result[14], result[15]];
+    return string;
+}
+
+
+//网络请求解析方法
+- (NSArray *)getConnectionArray:(id)result
+{
+    NSDictionary *dic = (NSDictionary *)result;
+    NSArray *array = [dic objectForKey:@"msg"];
+    return array;
+}
+
+//解析后 获取数据方法
+
+
+//返回字典(一条数据返回字典)
++ (NSDictionary *)dictionaryResults:(id)result
+{
+    NSDictionary *dic = (NSDictionary *)result;
+    NSArray *array = [dic objectForKey:@"msg"];
+    return array.firstObject;
+}
+
+//返回数组(多条数据返回数组)
++ (NSMutableArray *)arrayResults:(id)result
+{
+    NSDictionary *dic = (NSDictionary *)result;
+    NSArray *array = [dic objectForKey:@"msg"];
+    
+    return (NSMutableArray *)array;
+}
+
+
+//获取图片数组的方法
++ (NSArray *)getPicArrayFromString:(NSString *)picture
+{
+    NSArray *array = [picture componentsSeparatedByString:@","];
+    return array;
+}
+
++ (NSString *)UserId
+{
+    NSUserDefaults *user = [NSUserDefaults standardUserDefaults];
+    NSString *userId = [user objectForKey:@"userId"];
+    return userId;
+}
+
++ (NSDictionary *)paramatersForValues:(NSArray *)values keys:(NSString *)keys
+{
+    
+    NSArray *key = [self getPicArrayFromString:keys];
+    NSMutableDictionary *para = [NSMutableDictionary dictionary];
+    for (int i = 0; i < values.count; i++) {
+        [para setValue:values[i] forKey:key[i]];
+    }
+    return para;
+}
+
+
+
+
+//返回文字的高度
++ (CGFloat)GetMyTextHeight:(NSString *)text font:(CGFloat)font width:(CGFloat)width
+{
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font], NSFontAttributeName,nil];
+    
+    CGRect rect = [text boundingRectWithSize:CGSizeMake(width, 10000) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) attributes:dic context:nil];
+    
+    return rect.size.height + 10;
+    
+}
+
+
++ (CGSize)sizeOfText:(NSString *)text font:(CGFloat)font
+{
+    CGSize size = [text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:font], NSFontAttributeName,nil]];
+    return size;
+}
+
+
+//设置不同字体颜色
++ (NSMutableAttributedString *)fuwenbenLabel:(NSString *)string FontNumber:(id)font AndRange:(NSRange)range AndColor:(UIColor *)vaColor
+{
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:string];
+    
+    //设置字号
+    [str addAttribute:NSFontAttributeName value:font range:range];
+    
+    //设置文字颜色
+    [str addAttribute:NSForegroundColorAttributeName value:vaColor range:range];
+    
+    return str;
+}
+
+
+
+
+
+
+
+@end

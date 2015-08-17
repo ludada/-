@@ -1,0 +1,18 @@
+//
+//  Singleton.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-28.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface Singleton : NSObject
+
+@property (nonatomic, strong) NSMutableArray *myTabArray;
+
+
++ (id)shareInstance;
+
+@end

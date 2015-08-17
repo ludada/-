@@ -1,0 +1,100 @@
+//
+//  URLMacro.h
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-27.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+
+#pragma mark - 网络请求(这里是全部的网络请求)
+
+// 域名
+#define HTTP_NET @"http://123.57.61.27:8080"
+
+// 1 引导页查询
+//type:1=引导页 2=商圈广告位 3=快跑商城广告位
+//返回值:imgUrl：图片地址
+#define POST_ADVERTISE [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/GraphicAction!graphicGuidePage.action?"]
+    
+//2 获取地址列表
+#define POST_ADRESS(id) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/AdressAction! AdressAction.action?id=%@",id]
+
+//3 获取商圈类型列表
+#define GET_STORE_TYPE [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/BusinessCircleAction!businessCircleList.action"]
+
+//4  商铺店面列表
+//id是商圈id
+#define POST_STORE_LIST [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/BusinessStoreAction! businessStoreList.action?"]
+
+//5  商铺店面详情
+//id是商圈店面id
+#define POST_STORE_DETAIL [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/BusinessStoreAction!businessStoreView.action?"]
+
+//6  优惠券列表
+#define POST_COUPONS_LIST(id,type) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CouponsAction!couponsList.action?id=%@&type=%@",(id,type)]
+
+//7 优惠券兑换
+#define POST_COUPONS_RECORD(coupId,custId,points) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CouponsRecordAction!couponsRecordAdd.action?coupId=%@&custId=%@&points=%@",coupId,custId,points]
+
+//8 快跑商城（推荐、本地生活、精品购物、搜索）
+#define POST_FASTERRUNNER_STORES [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CouponsAction!couponsView.action?"]
+
+//9 注册、登录、忘记密码（用户）
+//
+#define POST_LOGIN_REGIST_FORGET [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CustomerAction!customerLogin.action?"]
+
+//10 修改密码（用户）
+#define POST_USER_CHANGE_PASSWORD(id,password) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CustomerAction!customerEditPassWord.action?id=%@&password=%@",id,password]
+
+//11、注册、登录、修改密码（服务者）(三合一)
+#define POST_LOGIN_CHANGE_REGIST_PASSWORD(type,mobileNo,password,realName,identityCard,identityImg,sex,flag,carNo) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/SalesmanAction!salesmanLogin.action?type=%@&mobileNo=%@&password=%@&realName=%@&sex=%@&identityCard=%@&identityImg=%@&flag=%@&carNo=%@",type,mobileNo,password,realName,identityCard,identityImg,sex,flag,carNo]
+
+//12、获取用户资料
+#define POST_USER_INFO(id) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CustomerAction!customerList.action?id=%@",id]
+
+//13、编辑资料
+#define POST_EDIT_USER(Id,adreId,headImg,nickName,sex,adress) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CustomerAction!customerSaveEdit.action?id=%@&adreId=%@&headImg=%@&nickname=%@&sex=%@&adres=%@",Id,adreId,headImg,nickName,sex,adress]
+
+//14、发送信息添加（语音、文本）
+#define POST_SEND_MESSAGE(id,type,content) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/VoiceMessagesAction!voiceMessagesAdd.action?id=%@&type=%@&content=%@",id,type,content]
+
+//15、确认发出（订单添加）
+#define POST_ADD_ORDER(id,type,starAdress,destAdress,longitude,latitude,vmId1,vmId2,vmId3) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/OrderAction!orderAdd.action?id=%@&type=%@&starAdress=%@&destAdress=%@&longitude=%@&latitude=%@&vmId1=%@&vmId2=%@&vmId3=%@",id,type,starAdress,destAdress,longitude,latitude,vmId1,vmId2,vmId3]
+
+// 16、订单详情
+#define POST_ORDER_DETAIL(id) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/OrderRecordAction!orderList.action?id=%@",id]
+
+//17、我的订单
+#define POST_MY_ORDER(id,type) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/OrderAction!orderMyList.action?id=%@&type=%@",id,type]
+
+//18、订单状态
+#define POST_ORDER_STATUS(id) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/OrderRecordAction! orderRecordList.action?id=%@",id]
+
+//19、充值记录
+#define POST_RECHARGE_RECORD(custId,monty,payWay) [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/RechargeAction! rechargeAdd.action?custId=%@&money=%@&payWay=%@",custId,monty,payWay]
+
+//20、我的金币
+#define POST_MY_COIN [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/PointsAction!pointsList.action?"]
+
+//21、商品详情
+#define POST_GOODS_DETAIL [NSString stringWithFormat:@"http://123.57.61.27:8080/runfast/CouponsImgAction!couponsImgView.action?"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

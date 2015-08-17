@@ -1,0 +1,120 @@
+//
+//  GoodsDetailViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-5-12.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "GoodsDetailViewController.h"
+#import "GlobalMacro.h"
+#import "NetworkRequest.h"
+#import "GlobalMethod.h"
+#import "URLMacro.h"
+#import "LoadIndicator.h"
+#import "GoodsDetailModel.h"
+#import "PurchaseView.h"
+#import "CustomPurchaseView.h"
+@interface GoodsDetailViewController()
+
+@end
+
+@implementation GoodsDetailViewController
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.backButton = YES;
+    }
+    return self;
+}
+
+- (void)loadView
+{
+    [super loadView];
+    self.goods = [[GoodsDetailView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    self.view = self.goods;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [LoadIndicator addIndicatorInView:self.view];
+    self.navigationItem.title = @"商品详情";
+    
+    //调取数据请求
+    [self dataWithResourse];
+}
+
+- (void)dataWithResourse
+{
+    NSDictionary *para = [GlobalMethod paramatersForValues:@[self.goodsId] keys:@"id"];
+    [NetworkRequest netWorkRequestPOSTWithString:POST_GOODS_DETAIL Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@" ,result);
+        NSDictionary *dic = [GlobalMethod dictionaryResults:result];
+        GoodsDetailModel *model = [[GoodsDetailModel alloc] init];
+        [model setValuesForKeysWithDictionary:dic];
+        self.goods.model = model;
+        
+        [self.goods.purchase addTarget:self action:@selector(purchaseAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [LoadIndicator stopAnimationInView:self.view];
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+        [LoadIndicator stopAnimationInView:self.view];
+    }];
+}
+
+//购买的点击事件
+- (void)purchaseAction:(id)sender
+{
+    [self myCoinsNumber];
+    
+}
+
+- (void)certainAction:(id)sender
+{
+    self.purchase.userInteractionEnabled = NO;
+    
+}
+
+- (void)cancelAction:(id)sender
+{
+    [self.purchase removeFromSuperview];
+}
+
+/**
+ *  获取我的金币
+ */
+- (void)myCoinsNumber
+{
+    NSString *userId = [GlobalMethod UserId];
+    NSDictionary *para = [GlobalMethod paramatersForValues:@[userId, @"1"]  keys:@"id,type"];
+    [NetworkRequest netWorkRequestPOSTWithString:POST_MY_COIN Parameters:para ResponseBlock:^(id result) {
+        NSLog(@"%@", result);
+        NSDictionary *dic = [GlobalMethod dictionaryResults:result];
+        self.coins = [dic objectForKey:@"pointsCount"];
+        
+        //创建界面
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        self.purchase = [[PurchaseView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [self.purchase createPurchaseView];
+        [self.purchase.certain addTarget:self action:@selector(certainAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.purchase.cancel addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.purchase.accountCoin.coin.text = self.coins;
+        self.purchase.spendCoin.coin.text = [NSString stringWithFormat:@"%@",self.goods.model.points];
+        
+        [window addSubview:self.purchase];
+
+    } ErrorBlock:^(id error) {
+        NSLog(@"%@", error);
+        
+    }];
+}
+
+
+
+
+
+@end

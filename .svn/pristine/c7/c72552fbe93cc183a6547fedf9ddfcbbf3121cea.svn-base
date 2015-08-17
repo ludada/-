@@ -1,0 +1,86 @@
+//
+//  ChangePasswordViewController.m
+//  FasterRunner
+//
+//  Created by HLKJ on 15-4-29.
+//  Copyright (c) 2015年 HLKJ. All rights reserved.
+//
+
+#import "ChangePasswordViewController.h"
+#import "GlobalMacro.h"
+#import "NetworkRequest.h"
+#import "GlobalMethod.h"
+#import "URLMacro.h"
+@interface ChangePasswordViewController ()
+
+@end
+
+@implementation ChangePasswordViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+    self=[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        
+    }
+    
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    self.navigationItem.title=@"修改密码";
+    
+    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(20, 20, SCREEN_WIDTH-40, 44)];
+    label1.text=@"请输入新密码";
+    [self.view addSubview:label1];
+    
+    self.oPassword=[[UITextField alloc]initWithFrame:CGRectMake(20, 74, SCREEN_WIDTH-44, 54)];
+    self.oPassword.borderStyle=UITextBorderStyleRoundedRect;
+    [self.oPassword setBackgroundColor:[UIColor whiteColor]
+     ];
+    [self.view addSubview:self.oPassword];;
+    
+    
+    
+    UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(20, 172, SCREEN_WIDTH-44, 44)];
+    label2.text=@"请再次输入密码";
+    [self.view addSubview:label2];
+    
+    
+    self.nPassword=[[UITextField alloc]initWithFrame:CGRectMake(20, 226, SCREEN_WIDTH-44, 54)];
+    self.nPassword.borderStyle=UITextBorderStyleRoundedRect;
+    [self.nPassword setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:self.nPassword];
+    
+    self.button=[[UIButton alloc]initWithFrame:CGRectMake(20, 300, SCREEN_WIDTH-40, 44)];
+    [self.button setBackgroundImage:[UIImage imageNamed:@"Status_bar"] forState:UIControlStateNormal];
+    [self.button.layer setCornerRadius:10.0];
+    [self.button addTarget:self action:@selector(changPasswordAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.button setTitle:@"确定" forState:UIControlStateNormal];
+    [self.view addSubview:self.button];
+    
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+- (void)changPasswordAction{
+    
+    NSString *str=POST_USER_CHANGE_PASSWORD(@"8",[GlobalMethod md5:self.nPassword.text] );
+    
+    [NetworkRequest netWorkRequestPOSTWithString:str Parameters:nil ResponseBlock:^(id result) {
+        NSDictionary *dic=result;
+        NSLog(@"%@ dic",dic);
+        
+        
+    } ErrorBlock:^(id error) {
+        NSLog(@"faile");
+    }];
+}
+@end
